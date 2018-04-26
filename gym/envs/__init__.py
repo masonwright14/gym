@@ -420,6 +420,191 @@ register(
     },
 )
 
+register(
+    id='Connect4-v0',
+    entry_point='gym.envs.board_game:C4Env',
+    kwargs={
+        'player_color': 'black',
+        'opponent': 'random',
+        'observation_type': 'numpy3c',
+        'illegal_move_mode': 'lose',
+        'obs_type': 'vector',
+        'search_depth': 0,
+    },
+)
+
+register(
+    id='Connect4Max-v0',
+    entry_point='gym.envs.board_game:C4Env',
+    kwargs={
+        'player_color': 'black',
+        'opponent': 'minimax',
+        'observation_type': 'numpy3c',
+        'illegal_move_mode': 'lose',
+        'obs_type': 'vector',
+        'search_depth': 1,
+    },
+)
+
+register(
+    id='Connect4MaxJava-v0',
+    entry_point='gym.envs.board_game:C4JavaEnv',
+)
+
+register(
+    id='DepgraphJava-v0',
+    entry_point='gym.envs.board_game:DepgraphJavaEnv',
+)
+
+register(
+    id='DepgraphJavaConv-v0',
+    entry_point='gym.envs.board_game:DepgraphJavaEnvConv',
+)
+
+register(
+    id='DepgraphJava29N-v0',
+    entry_point='gym.envs.board_game:DepgraphJavaEnv29N',
+)
+
+register(
+    id='DepgraphJavaAtt-v0',
+    entry_point='gym.envs.board_game:DepgraphJavaEnvAtt',
+)
+
+register(
+    id='DepgraphJavaEnvAtt29N-v0',
+    entry_point='gym.envs.board_game:DepgraphJavaEnvAtt29N',
+)
+
+register(
+    id='DepgraphJavaEnvBoth-v0',
+    entry_point='gym.envs.board_game:DepgraphJavaEnvBoth',
+)
+
+register(
+    id='DepgraphJavaEnvBoth29N-v0',
+    entry_point='gym.envs.board_game:DepgraphJavaEnvBoth29N',
+)
+
+register(
+    id='DepgraphJavaEnvVsMixedAtt-v0',
+    entry_point='gym.envs.board_game:DepgraphJavaEnvVsMixedAtt',
+)
+
+register(
+    id='VsNetTest-v0',
+    entry_point='gym.envs.board_game:VsNetworkTest',
+)
+
+register(
+    id='DepgraphJavaEnvVsMixedDef-v0',
+    entry_point='gym.envs.board_game:DepgraphJavaEnvVsMixedDef',
+)
+
+register(
+    id='Connect4Conv-v0',
+    entry_point='gym.envs.board_game:C4Env',
+    kwargs={
+        'player_color': 'black',
+        'opponent': 'random',
+        'observation_type': 'numpy3c',
+        'illegal_move_mode': 'lose',
+        'obs_type': 'tensor',
+        'search_depth': 0,
+    },
+)
+
+register(
+    id='Connect4ConvAug-v0',
+    entry_point='gym.envs.board_game:C4Env',
+    kwargs={
+        'player_color': 'black',
+        'opponent': 'random',
+        'observation_type': 'numpy3c',
+        'illegal_move_mode': 'lose',
+        'obs_type': 'tensor_aug',
+        'search_depth': 1,
+    },
+)
+
+register(
+    id='Connect4MaxConv-v0',
+    entry_point='gym.envs.board_game:C4Env',
+    kwargs={
+        'player_color': 'black',
+        'opponent': 'minimax',
+        'observation_type': 'numpy3c',
+        'illegal_move_mode': 'lose',
+        'obs_type': 'tensor',
+        'search_depth': 1,
+    },
+)
+
+register(
+    id='Connect4HumanConvAug-v0',
+    entry_point='gym.envs.board_game:C4Env',
+    kwargs={
+        'player_color': 'black',
+        'opponent': 'human',
+        'observation_type': 'numpy3c',
+        'illegal_move_mode': 'lose',
+        'obs_type': 'tensor_aug',
+        'search_depth': 0,
+    },
+)
+
+register(
+    id='Connect4MaxConvAug-v0',
+    entry_point='gym.envs.board_game:C4Env',
+    kwargs={
+        'player_color': 'black',
+        'opponent': 'minimax',
+        'observation_type': 'numpy3c',
+        'illegal_move_mode': 'lose',
+        'obs_type': 'tensor_aug',
+        'search_depth': 1,
+    },
+)
+
+register(
+    id='Connect4MaxConvAugD2-v0',
+    entry_point='gym.envs.board_game:C4Env',
+    kwargs={
+        'player_color': 'black',
+        'opponent': 'minimax',
+        'observation_type': 'numpy3c',
+        'illegal_move_mode': 'lose',
+        'obs_type': 'tensor_aug',
+        'search_depth': 2,
+    },
+)
+
+register(
+    id='Connect4MaxConvAugD3-v0',
+    entry_point='gym.envs.board_game:C4Env',
+    kwargs={
+        'player_color': 'black',
+        'opponent': 'minimax',
+        'observation_type': 'numpy3c',
+        'illegal_move_mode': 'lose',
+        'obs_type': 'tensor_aug',
+        'search_depth': 3,
+    },
+)
+
+register(
+    id='Connect4MaxConvAugD4-v0',
+    entry_point='gym.envs.board_game:C4Env',
+    kwargs={
+        'player_color': 'black',
+        'opponent': 'minimax',
+        'observation_type': 'numpy3c',
+        'illegal_move_mode': 'lose',
+        'obs_type': 'tensor_aug',
+        'search_depth': 4,
+    },
+)
+
 # Debugging
 # ----------------------------------------
 
