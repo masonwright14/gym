@@ -30,7 +30,11 @@ DEF_INPUT_DEPTH = 2 + DEF_OBS_LENGTH * 2
 DEF_OBS_SIZE = NODE_COUNT * DEF_INPUT_DEPTH
 ATT_OBS_SIZE = (AND_NODE_COUNT + EDGE_TO_OR_NODE_COUNT) * 2 + NODE_COUNT * ATT_OBS_LENGTH + 1
 
-ATT_MIXED_STRAT_FILE = "randNoAnd_B_epoch2_att.tsv"
+ATT_MIXED_STRAT_FILE = "randNoAnd_B_epoch6_att.tsv"
+# ATT_MIXED_STRAT_FILE = "randNoAnd_B_epoch5_att.tsv"
+# ATT_MIXED_STRAT_FILE = "randNoAnd_B_epoch4_att.tsv"
+# ATT_MIXED_STRAT_FILE = "randNoAnd_B_epoch3_att.tsv"
+# ATT_MIXED_STRAT_FILE = "randNoAnd_B_epoch2_att.tsv"
 # ATT_MIXED_STRAT_FILE = "randNoAnd_B_noNet_attStrat.tsv"
 ATT_STRAT_TO_PROB = {}
 IS_HEURISTIC_ATTACKER = False
@@ -101,8 +105,15 @@ class DepgraphJavaEnvVsMixedAtt(gym.Env):
             # def_obs = def_obs.reshape(1, def_obs.size)
             return def_obs
 
+        cur_att_scope = self.get_net_scope(cur_att_strat)
+
         if cur_att_strat != ATT_NET_NAME:
-            ATT_NETWORK, _, ATT_SESS = deepq.load_for_multiple_nets(cur_att_strat)
+            if cur_att_scope is None:
+                ATT_NETWORK, _, ATT_SESS = deepq.load_for_multiple_nets(cur_att_strat)
+            else:
+                ATT_NETWORK, _, ATT_SESS = deepq.load_for_multiple_nets_with_scope( \
+                    cur_att_strat, cur_att_scope)
+
             ATT_NET_NAME = cur_att_strat
 
         def_obs = result_values[:DEF_OBS_SIZE]
@@ -316,6 +327,20 @@ class DepgraphJavaEnvVsMixedAtt(gym.Env):
         if close:
             return
         print(JAVA_GAME.render())
+
+    def get_net_scope(self, net_name):
+        '''
+        Return the scope in which to load an attacker network, based on its name.
+        '''
+        if "epoch2" in net_name:
+            return "deepq_train"
+        if "epoch3" in net_name:
+            return "deepq_train_e3"
+        if "epoch4" in net_name:
+            return "deepq_train_e4"
+        if "epoch5" in net_name:
+            return "deepq_train_e5"
+        return None
 
     def get_opponent_reward(self):
         '''

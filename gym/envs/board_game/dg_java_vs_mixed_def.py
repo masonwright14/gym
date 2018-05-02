@@ -16,8 +16,8 @@ from gym import spaces
 from baselines import deepq
 
 NODE_COUNT = 30
-AND_NODE_COUNT = 11
-EDGE_TO_OR_NODE_COUNT = 75
+AND_NODE_COUNT = 5
+EDGE_TO_OR_NODE_COUNT = 100
 
 DEF_OBS_LENGTH = 3
 ATT_OBS_LENGTH = 1
@@ -31,7 +31,11 @@ DEF_INPUT_DEPTH = 2 + DEF_OBS_LENGTH * 2
 DEF_OBS_SIZE = NODE_COUNT * DEF_INPUT_DEPTH
 ATT_OBS_SIZE = (AND_NODE_COUNT + EDGE_TO_OR_NODE_COUNT) * 2 + NODE_COUNT * ATT_OBS_LENGTH + 1
 
-DEF_MIXED_STRAT_FILE = "randNoAnd_B_epoch2_def.tsv"
+DEF_MIXED_STRAT_FILE = "randNoAnd_B_epoch6_def.tsv"
+# DEF_MIXED_STRAT_FILE = "randNoAnd_B_epoch5_def.tsv"
+# DEF_MIXED_STRAT_FILE = "randNoAnd_B_epoch4_def.tsv"
+# DEF_MIXED_STRAT_FILE = "randNoAnd_B_epoch3_def.tsv"
+# DEF_MIXED_STRAT_FILE = "randNoAnd_B_epoch2_def.tsv"
 # DEF_MIXED_STRAT_FILE = "randNoAnd_B_noNet_defStrat.tsv"
 DEF_STRAT_TO_PROB = {}
 IS_HEURISTIC_DEFENDER = False
@@ -103,8 +107,15 @@ class DepgraphJavaEnvVsMixedDef(gym.Env):
             # def_obs = def_obs.reshape(1, def_obs.size)
             return def_obs
 
+        cur_def_scope = self.get_net_scope(cur_def_strat)
+
         if cur_def_strat != DEF_NET_NAME:
-            DEF_NETWORK, _, DEF_SESS = deepq.load_for_multiple_nets(cur_def_strat)
+            if cur_def_scope is None:
+                DEF_NETWORK, _, DEF_SESS = deepq.load_for_multiple_nets(cur_def_strat)
+            else:
+                DEF_NETWORK, _, DEF_SESS = deepq.load_for_multiple_nets_with_scope( \
+                    cur_def_strat, cur_def_scope)
+
             DEF_NET_NAME = cur_def_strat
 
         IS_DEF_TURN = True
@@ -317,6 +328,20 @@ class DepgraphJavaEnvVsMixedDef(gym.Env):
         if close:
             return
         print(JAVA_GAME.render())
+
+    def get_net_scope(self, net_name):
+        '''
+        Return the scope in which to load a defender network, based on its name.
+        '''
+        if "epoch2" in net_name:
+            return "deepq_train"
+        if "epoch3" in net_name:
+            return "deepq_train_e3"
+        if "epoch4" in net_name:
+            return "deepq_train_e4"
+        if "epoch5" in net_name:
+            return "deepq_train_e5"
+        return None
 
     def get_opponent_reward(self):
         '''
