@@ -492,6 +492,11 @@ register(
 )
 
 register(
+    id='DepgraphJavaEnvVsMixedAtt29N-v0',
+    entry_point='gym.envs.board_game:DepgraphJavaEnvVsMixedAtt29N',
+)
+
+register(
     id='VsNetTest-v0',
     entry_point='gym.envs.board_game:VsNetworkTest',
 )
@@ -499,6 +504,11 @@ register(
 register(
     id='DepgraphJavaEnvVsMixedDef-v0',
     entry_point='gym.envs.board_game:DepgraphJavaEnvVsMixedDef',
+)
+
+register(
+    id='DepgraphJavaEnvVsMixedDef29N-v0',
+    entry_point='gym.envs.board_game:DepgraphJavaEnvVsMixedDef29N',
 )
 
 register(
