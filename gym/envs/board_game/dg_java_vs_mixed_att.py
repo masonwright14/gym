@@ -15,6 +15,7 @@ import re
 import gym
 from gym import spaces
 from baselines import deepq
+from gym.envs.board_game.d30_att_config import ATT_MIXED_STRAT_FILE
 
 NODE_COUNT = 30
 AND_NODE_COUNT = 5
@@ -31,7 +32,7 @@ DEF_INPUT_DEPTH = 2 + DEF_OBS_LENGTH * 2
 DEF_OBS_SIZE = NODE_COUNT * DEF_INPUT_DEPTH
 ATT_OBS_SIZE = (AND_NODE_COUNT + EDGE_TO_OR_NODE_COUNT) * 2 + NODE_COUNT * ATT_OBS_LENGTH + 1
 
-ATT_MIXED_STRAT_FILE = "d30_epoch13_att.tsv"
+# ATT_MIXED_STRAT_FILE = "d30_epoch13_att.tsv"
 # ATT_MIXED_STRAT_FILE = "randNoAnd_B_epoch5_att.tsv"
 # ATT_MIXED_STRAT_FILE = "randNoAnd_B_epoch4_att.tsv"
 # ATT_MIXED_STRAT_FILE = "randNoAnd_B_epoch3_att.tsv"
