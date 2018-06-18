@@ -11,6 +11,7 @@ import random
 from py4j.java_gateway import JavaGateway
 from py4j.java_collections import ListConverter
 import numpy as np
+import re
 import gym
 from gym import spaces
 from baselines import deepq
@@ -31,7 +32,7 @@ DEF_INPUT_DEPTH = 2 + DEF_OBS_LENGTH * 2
 DEF_OBS_SIZE = NODE_COUNT * DEF_INPUT_DEPTH
 ATT_OBS_SIZE = (AND_NODE_COUNT + EDGE_TO_OR_NODE_COUNT) * 2 + NODE_COUNT * ATT_OBS_LENGTH + 1
 
-DEF_MIXED_STRAT_FILE = "randNoAnd_B_epoch6_def.tsv"
+DEF_MIXED_STRAT_FILE = "d30_epoch13_def.tsv"
 # DEF_MIXED_STRAT_FILE = "randNoAnd_B_epoch5_def.tsv"
 # DEF_MIXED_STRAT_FILE = "randNoAnd_B_epoch4_def.tsv"
 # DEF_MIXED_STRAT_FILE = "randNoAnd_B_epoch3_def.tsv"
@@ -330,18 +331,29 @@ class DepgraphJavaEnvVsMixedDef(gym.Env):
         print(JAVA_GAME.render())
 
     def get_net_scope(self, net_name):
-        '''
-        Return the scope in which to load a defender network, based on its name.
-        '''
-        if "epoch2" in net_name:
+        # name is like:
+        # *epochNUM_* or *epochNUM[a-z]* or *epochNUM.pkl, where NUM is an integer > 1,
+        # unless "epoch" is absent, in which case return None.
+        #
+        # if "epoch" is absent: return None.
+        # else if NUM is 2: return "deepq_train".
+        # else: return "deepq_train_eNUM", inserting the integer for NUM
+        if net_name == "dg_rand_30n_noAnd_B_eq_2.pkl" or \
+            net_name == "dg_dqmlp_rand30NoAnd_B_att_fixed.pkl":
+            return None
+
+        epoch_index = net_name.find('epoch')
+        num_start_index = epoch_index + len("epoch")
+
+        underbar_index = net_name.find('_', num_start_index + 1)
+        dot_index = net_name.find('.', num_start_index + 1)
+        e_index = net_name.find('e', num_start_index + 1)
+        candidates = [x for x in [underbar_index, dot_index, e_index] if x > -1]
+        num_end_index = min(candidates)
+        net_num = net_name[num_start_index : num_end_index]
+        if net_num == "2":
             return "deepq_train"
-        if "epoch3" in net_name:
-            return "deepq_train_e3"
-        if "epoch4" in net_name:
-            return "deepq_train_e4"
-        if "epoch5" in net_name:
-            return "deepq_train_e5"
-        return None
+        return "deepq_train_e" + str(net_num)
 
     def get_opponent_reward(self):
         '''
