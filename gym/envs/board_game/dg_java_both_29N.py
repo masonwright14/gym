@@ -52,6 +52,7 @@ class DepgraphJavaEnvBoth29N(gym.Env):
         IS_DEF_TURN = True
         def_obs = result_values[:DEF_OBS_SIZE]
         def_obs = np.array([x for x in def_obs])
+        def_obs = def_obs.reshape(1, def_obs.size)
         return def_obs
 
     def _step(self, action):
@@ -60,8 +61,7 @@ class DepgraphJavaEnvBoth29N(gym.Env):
         action_id = action_scalar + 1
 
         both_obs, is_done, state_dict, is_def_turn_local = \
-            DepgraphJavaEnvBoth29N.step_result_from_flat_list(
-                JAVA_GAME.stepCurrent(action_id))
+            DepgraphJavaEnvBoth29N.step_result_from_flat_list(JAVA_GAME.stepCurrent(action_id))
 
         global IS_DEF_TURN
         IS_DEF_TURN = is_def_turn_local
@@ -73,6 +73,7 @@ class DepgraphJavaEnvBoth29N(gym.Env):
         if not IS_DEF_TURN:
             cur_obs = att_obs
         cur_obs = np.array([x for x in cur_obs])
+        cur_obs = cur_obs.reshape(1, cur_obs.size)
         return cur_obs, is_done, state_dict, IS_DEF_TURN
 
     @staticmethod
@@ -132,3 +133,8 @@ class DepgraphJavaEnvBoth29N(gym.Env):
         Get the number of distinct attacker actions.
         '''
         return ATT_ACTION_COUNT
+
+    def close_gateway(self):
+        GATEWAY.close()
+        GATEWAY.close_callback_server()
+        GATEWAY.shutdown()

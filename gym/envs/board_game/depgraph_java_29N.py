@@ -91,3 +91,14 @@ class DepgraphJavaEnv29N(gym.Env):
         '''
         return JAVA_GAME.getOpponentTotalPayoff()
 
+    def get_self_reward(self):
+        '''
+        Get the total discounted reward of self (defender) in the current game.
+        '''
+        return JAVA_GAME.getSelfTotalPayoff()
+
+    def close_gateway(self):
+        GATEWAY.close()
+        GATEWAY.close_callback_server()
+        GATEWAY.shutdown()
+

@@ -12,8 +12,8 @@ import gym
 from gym import spaces
 
 NODE_COUNT = 29
-AND_NODE_COUNT = 13 # for SepLay0_noAnd_B
-EDGE_TO_OR_NODE_COUNT = 89 # for SepLay0_noAnd_B
+AND_NODE_COUNT = 13
+EDGE_TO_OR_NODE_COUNT = 89
 OBS_LENGTH = 1
 JAVA_GAME = None
 GATEWAY = None
@@ -93,7 +93,17 @@ class DepgraphJavaEnvAtt29N(gym.Env):
 
     def get_opponent_reward(self):
         '''
-        Get the total discounted reward of the opponent (attacker) in the current game.
+        Get the total discounted reward of the opponent (defender) in the current game.
         '''
         return JAVA_GAME.getOpponentTotalPayoff()
 
+    def get_self_reward(self):
+        '''
+        Get the total discounted reward of self (attacker) in the current game.
+        '''
+        return JAVA_GAME.getSelfTotalPayoff()
+
+    def close_gateway(self):
+        GATEWAY.close()
+        GATEWAY.close_callback_server()
+        GATEWAY.shutdown()
