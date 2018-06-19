@@ -487,6 +487,11 @@ register(
 )
 
 register(
+    id='DepgraphJavaEnvBothJson29N-v0',
+    entry_point='gym.envs.board_game:DepgraphJavaEnvBothJson29N',
+)
+
+register(
     id='DepgraphJavaEnvVsMixedAtt-v0',
     entry_point='gym.envs.board_game:DepgraphJavaEnvVsMixedAtt',
 )
