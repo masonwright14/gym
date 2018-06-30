@@ -15,7 +15,7 @@ import re
 import gym
 from gym import spaces
 from baselines import deepq
-from gym.envs.board_game.d30_att_config import ATT_MIXED_STRAT_FILE
+from gym.envs.board_game.d30m_att_config import ATT_MIXED_STRAT_FILE
 
 NODE_COUNT = 30
 AND_NODE_COUNT = 5
@@ -331,29 +331,28 @@ class DepgraphJavaEnvVsMixedAtt(gym.Env):
         print(JAVA_GAME.render())
 
     def get_net_scope(self, net_name):
-        # name is like:
-        # *epochNUM_* or *epochNUM[a-z]* or *epochNUM.pkl, where NUM is an integer > 1,
-        # unless "epoch" is absent, in which case return None.
+        # defender name is like:
+        # *_epochNUM.pkl, where NUM is an integer >= 1.
         #
-        # if "epoch" is absent: return None.
-        # else if NUM is 2: return "deepq_train".
+        # attacker name is like:
+        # *_epochNUM_att.pkl, where NUM is an integer >= 1.
+        #
+        # if NUM == 1: return "deepq_train"
         # else: return "deepq_train_eNUM", inserting the integer for NUM
-        if net_name == "dg_rand_30n_noAnd_B_eq_2.pkl" or \
-            net_name == "dg_dqmlp_rand30NoAnd_B_att_fixed.pkl":
-            return None
+        if "epoch1.pkl" in net_name or "epoch1_att.pkl" in net_name:
+            # first round is special case: don't add _e1
+            return "deepq_train"
 
         epoch_index = net_name.find('epoch')
         num_start_index = epoch_index + len("epoch")
-
-        underbar_index = net_name.find('_', num_start_index + 1)
-        dot_index = net_name.find('.', num_start_index + 1)
-        e_index = net_name.find('e', num_start_index + 1)
-        candidates = [x for x in [underbar_index, dot_index, e_index] if x > -1]
-        num_end_index = min(candidates)
-        net_num = net_name[num_start_index : num_end_index]
-        if net_num == "2":
-            return "deepq_train"
-        return "deepq_train_e" + str(net_num)
+        num_end_index = None
+        if "_att.pkl" in net_name:
+            # attacker network
+            num_end_index = net_name.find("_att.pkl", num_start_index)
+        else:
+            # defender network
+            num_end_index = net_name.find(".pkl", num_start_index)
+        return "deepq_train_e" + net_name[num_start_index : num_end_index]
 
     def get_opponent_reward(self):
         '''
