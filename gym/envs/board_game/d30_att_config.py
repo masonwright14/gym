@@ -1,1 +1,1 @@
-ATT_MIXED_STRAT_FILE = "d30_epoch13_att.tsv"
+ATT_MIXED_STRAT_FILE = "d30_epoch24_att.tsv"

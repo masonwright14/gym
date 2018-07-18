@@ -11,11 +11,10 @@ import random
 from py4j.java_gateway import JavaGateway
 from py4j.java_collections import ListConverter
 import numpy as np
-import re
 import gym
 from gym import spaces
-from baselines import deepq
 from gym.envs.board_game.d30m_att_config import ATT_MIXED_STRAT_FILE
+from baselines import deepq
 
 NODE_COUNT = 30
 AND_NODE_COUNT = 5
@@ -365,3 +364,9 @@ class DepgraphJavaEnvVsMixedAtt(gym.Env):
         Get the total discounted reward of self (defender) in the current game.
         '''
         return JAVA_GAME.getSelfTotalPayoff()
+
+    def update_for_retrain(self, retrain_config_str):
+        '''
+        Change to using retrain_config_str as the opponent mixed strategy.
+        '''
+        self.setup_att_mixed_strat(retrain_config_str)
