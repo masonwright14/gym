@@ -8,13 +8,13 @@ Requirements:
 
 import csv
 import random
+import re
 from py4j.java_gateway import JavaGateway
 from py4j.java_collections import ListConverter
 import numpy as np
-import re
+from baselines import deepq
 import gym
 from gym import spaces
-from baselines import deepq
 from gym.envs.board_game.d30_att_config import ATT_MIXED_STRAT_FILE
 
 NODE_COUNT = 30

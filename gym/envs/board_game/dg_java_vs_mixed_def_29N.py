@@ -8,12 +8,12 @@ Requirements:
 
 import csv
 import random
-from py4j.java_gateway import JavaGateway
+from py4j.java_gateway import JavaGateway, GatewayParameters, CallbackServerParameters
 from py4j.java_collections import ListConverter
 import numpy as np
+from baselines import deepq
 import gym
 from gym import spaces
-from baselines import deepq
 from gym.envs.board_game.sl29_def_config import DEF_MIXED_STRAT_FILE
 
 NODE_COUNT = 29
@@ -44,6 +44,24 @@ DEF_NETWORK = None
 DEF_NET_NAME = None
 DEF_SESS = None
 
+MIN_PORT = 25335
+
+def get_lines(file_name):
+    lines = None
+    with open(file_name) as f:
+        lines = f.readlines()
+    lines = [x.strip() for x in lines]
+    lines = [x for x in lines if x]
+    return lines
+
+def read_att_port():
+    port_name = "s29_train_att_port.txt"
+    lines = get_lines(port_name)
+    port = int(lines[0])
+    if port < MIN_PORT or port % 2 != 1:
+        raise ValueError("Invalid att port: " + str(port))
+    return port
+
 class DepgraphJavaEnvVsMixedDef29N(gym.Env):
     """
     Depgraph game environment. Play against a fixed opponent.
@@ -57,7 +75,11 @@ class DepgraphJavaEnvVsMixedDef29N(gym.Env):
         '''
         # https://www.py4j.org/getting_started.html
         global GATEWAY
-        GATEWAY = JavaGateway()
+        att_port = read_att_port()
+        GATEWAY = JavaGateway(python_proxy_port=att_port,
+                              gateway_parameters=GatewayParameters(port=att_port),
+                              callback_server_parameters=
+                              CallbackServerParameters(port=(att_port + 1)))
         global JAVA_GAME
         JAVA_GAME = GATEWAY.entry_point.getGame()
 
