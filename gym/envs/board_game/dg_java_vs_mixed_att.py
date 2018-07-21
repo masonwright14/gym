@@ -8,8 +8,7 @@ Requirements:
 
 import csv
 import random
-import re
-from py4j.java_gateway import JavaGateway
+from py4j.java_gateway import JavaGateway, GatewayParameters, CallbackServerParameters
 from py4j.java_collections import ListConverter
 import numpy as np
 from baselines import deepq
@@ -49,6 +48,25 @@ ATT_NETWORK = None
 ATT_NET_NAME = None
 ATT_SESS = None
 
+MIN_PORT = 25333
+DEF_PORT = None
+
+def get_lines(file_name):
+    lines = None
+    with open(file_name) as f:
+        lines = f.readlines()
+    lines = [x.strip() for x in lines]
+    lines = [x for x in lines if x]
+    return lines
+
+def read_def_port():
+    port_name = "s29_train_def_port.txt"
+    lines = get_lines(port_name)
+    port = int(lines[0])
+    if port < MIN_PORT or port % 2 != 1:
+        raise ValueError("Invalid def port: " + str(port))
+    return port
+
 class DepgraphJavaEnvVsMixedAtt(gym.Env):
     """
     Depgraph game environment. Play against a fixed opponent.
@@ -61,8 +79,13 @@ class DepgraphJavaEnvVsMixedAtt(gym.Env):
         heuristic strategies.
         '''
         # https://www.py4j.org/getting_started.html
+        global DEF_PORT
+        DEF_PORT = read_def_port()
         global GATEWAY
-        GATEWAY = JavaGateway()
+        GATEWAY = JavaGateway(python_proxy_port=DEF_PORT,
+                              gateway_parameters=GatewayParameters(port=DEF_PORT),
+                              callback_server_parameters=
+                              CallbackServerParameters(port=(DEF_PORT + 1)))
         global JAVA_GAME
         JAVA_GAME = GATEWAY.entry_point.getGame()
 
@@ -372,3 +395,9 @@ class DepgraphJavaEnvVsMixedAtt(gym.Env):
         Change to using retrain_config_str as the opponent mixed strategy.
         '''
         self.setup_att_mixed_strat(retrain_config_str)
+
+    def get_port(self):
+        '''
+        Get the port number used for Py4J connection.
+        '''
+        return DEF_PORT

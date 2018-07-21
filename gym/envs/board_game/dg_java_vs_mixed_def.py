@@ -8,13 +8,12 @@ Requirements:
 
 import csv
 import random
-from py4j.java_gateway import JavaGateway
+from py4j.java_gateway import JavaGateway, GatewayParameters, CallbackServerParameters
 from py4j.java_collections import ListConverter
 import numpy as np
-import re
+from baselines import deepq
 import gym
 from gym import spaces
-from baselines import deepq
 from gym.envs.board_game.d30_def_config import DEF_MIXED_STRAT_FILE
 
 NODE_COUNT = 30
@@ -50,6 +49,25 @@ DEF_NETWORK = None
 DEF_NET_NAME = None
 DEF_SESS = None
 
+MIN_PORT = 25335
+ATT_PORT = None
+
+def get_lines(file_name):
+    lines = None
+    with open(file_name) as f:
+        lines = f.readlines()
+    lines = [x.strip() for x in lines]
+    lines = [x for x in lines if x]
+    return lines
+
+def read_att_port():
+    port_name = "s29_train_att_port.txt"
+    lines = get_lines(port_name)
+    port = int(lines[0])
+    if port < MIN_PORT or port % 2 != 1:
+        raise ValueError("Invalid att port: " + str(port))
+    return port
+
 class DepgraphJavaEnvVsMixedDef(gym.Env):
     """
     Depgraph game environment. Play against a fixed opponent.
@@ -62,8 +80,13 @@ class DepgraphJavaEnvVsMixedDef(gym.Env):
         heuristic strategies.
         '''
         # https://www.py4j.org/getting_started.html
+        global ATT_PORT
+        ATT_PORT = read_att_port()
         global GATEWAY
-        GATEWAY = JavaGateway()
+        GATEWAY = JavaGateway(python_proxy_port=ATT_PORT,
+                              gateway_parameters=GatewayParameters(port=ATT_PORT),
+                              callback_server_parameters=
+                              CallbackServerParameters(port=(ATT_PORT + 1)))
         global JAVA_GAME
         JAVA_GAME = GATEWAY.entry_point.getGame()
 
@@ -367,6 +390,12 @@ class DepgraphJavaEnvVsMixedDef(gym.Env):
         Get the total discounted reward of self (attacker) in the current game.
         '''
         return JAVA_GAME.getSelfTotalPayoff()
+
+    def get_port(self):
+        '''
+        Get the port number used for Py4J connection.
+        '''
+        return ATT_PORT
 
     @staticmethod
     def first_def_obs():
