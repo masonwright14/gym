@@ -45,6 +45,7 @@ DEF_NET_NAME = None
 DEF_SESS = None
 
 MIN_PORT = 25335
+ATT_PORT = None
 
 def get_lines(file_name):
     lines = None
@@ -74,12 +75,13 @@ class DepgraphJavaEnvVsMixedDef29N(gym.Env):
         heuristic strategies.
         '''
         # https://www.py4j.org/getting_started.html
+        global ATT_PORT
+        ATT_PORT = read_att_port()
         global GATEWAY
-        att_port = read_att_port()
-        GATEWAY = JavaGateway(python_proxy_port=att_port,
-                              gateway_parameters=GatewayParameters(port=att_port),
+        GATEWAY = JavaGateway(python_proxy_port=ATT_PORT,
+                              gateway_parameters=GatewayParameters(port=ATT_PORT),
                               callback_server_parameters=
-                              CallbackServerParameters(port=(att_port + 1)))
+                              CallbackServerParameters(port=(ATT_PORT + 1)))
         global JAVA_GAME
         JAVA_GAME = GATEWAY.entry_point.getGame()
 
@@ -382,6 +384,12 @@ class DepgraphJavaEnvVsMixedDef29N(gym.Env):
         Get the total discounted reward of self (attacker) in the current game.
         '''
         return JAVA_GAME.getSelfTotalPayoff()
+
+    def get_port(self):
+        '''
+        Get the port number used for Py4J connection.
+        '''
+        return ATT_PORT
 
     @staticmethod
     def first_def_obs():
