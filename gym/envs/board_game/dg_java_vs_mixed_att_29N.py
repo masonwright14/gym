@@ -45,7 +45,7 @@ ATT_SESS = None
 MIN_PORT = 25333
 DEF_PORT = None
 
-MY_DIR = "~/gym/gym/gym/envs/board_game/"
+MY_DIR = "../gym/gym/gym/envs/board_game/"
 
 def get_lines(file_name):
     lines = None
