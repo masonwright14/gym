@@ -57,7 +57,7 @@ def get_lines(file_name):
     return lines
 
 def read_att_port():
-    port_name = MY_DIR +  "s29_train_att_port.txt"
+    port_name = MY_DIR + "s29_train_att_port.txt"
     lines = get_lines(port_name)
     port = int(lines[0])
     if port < MIN_PORT or port % 2 != 1:
