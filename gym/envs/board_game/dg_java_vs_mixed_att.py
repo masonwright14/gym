@@ -60,7 +60,7 @@ def get_lines(file_name):
     return lines
 
 def read_def_port():
-    port_name = "s29_train_def_port.txt"
+    port_name = "d30_train_def_port.txt"
     lines = get_lines(port_name)
     port = int(lines[0])
     if port < MIN_PORT or port % 2 != 1:
