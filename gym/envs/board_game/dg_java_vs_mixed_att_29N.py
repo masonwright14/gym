@@ -14,7 +14,7 @@ import numpy as np
 from baselines import deepq
 import gym
 from gym import spaces
-from gym.envs.board_game.sl29_att_config import ATT_MIXED_STRAT_FILE
+from gym.envs.board_game.s29_att_config import ATT_MIXED_STRAT_FILE
 
 NODE_COUNT = 29
 AND_NODE_COUNT = 13
