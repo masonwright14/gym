@@ -5,8 +5,6 @@ Requirements:
     Py4J        https://www.py4j.org/download.html
     OpenAI Gym  https://github.com/openai/gym#installation
 '''
-import sys
-import os
 import csv
 import random
 from py4j.java_gateway import JavaGateway, GatewayParameters, CallbackServerParameters
@@ -48,6 +46,8 @@ DEF_SESS = None
 MIN_PORT = 25335
 ATT_PORT = None
 
+MY_DIR = "~/gym/gym/gym/envs/board_game/"
+
 def get_lines(file_name):
     lines = None
     with open(file_name) as f:
@@ -57,7 +57,7 @@ def get_lines(file_name):
     return lines
 
 def read_att_port():
-    port_name = os.path.join(sys.path[0], "s29_train_att_port.txt")
+    port_name = MY_DIR +  "s29_train_att_port.txt"
     lines = get_lines(port_name)
     port = int(lines[0])
     if port < MIN_PORT or port % 2 != 1:
