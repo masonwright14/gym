@@ -356,7 +356,7 @@ class DepgraphJavaEnvVsMixedDef(gym.Env):
             return
         print(JAVA_GAME.render())
 
-'''
+    '''
     def get_net_scope(self, net_name):
         # name is like:
         # *epochNUM_* or *epochNUM[a-z]* or *epochNUM.pkl, where NUM is an integer > 1,
@@ -381,7 +381,7 @@ class DepgraphJavaEnvVsMixedDef(gym.Env):
         if net_num == "2":
             return "deepq_train"
         return "deepq_train_e" + str(net_num)
-'''
+    '''
 
     def get_net_scope(self, net_name):
         # defender name is like:
