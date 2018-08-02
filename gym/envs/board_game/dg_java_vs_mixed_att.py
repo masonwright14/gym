@@ -347,6 +347,13 @@ class DepgraphJavaEnvVsMixedAtt(gym.Env):
         # should not get here
         return ATT_STRAT_TO_PROB.keys()[0]
 
+    def update_for_retrain(self, strat_file):
+        '''
+        Change to the given opponent mixed strategy and reset game.
+        '''
+        self.setup_att_mixed_strat(strat_file)
+        self.reset()
+
     def _render(self, mode='human', close=False):
         '''
         Show human-readable view of environment state.

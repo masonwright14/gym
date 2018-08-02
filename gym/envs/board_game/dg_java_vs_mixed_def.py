@@ -334,6 +334,13 @@ class DepgraphJavaEnvVsMixedDef(gym.Env):
             raise ValueError("Wrong sum of probabilities: " + \
                 str(sum(DEF_STRAT_TO_PROB.values())))
 
+    def update_for_retrain(self, strat_file):
+        '''
+        Change to the given opponent mixed strategy and reset game.
+        '''
+        self.setup_def_mixed_strat(strat_file)
+        self.reset()
+
     def sample_mixed_strat(self):
         '''
         Draw a mixed strategy at random from the defender strategy, weighted by the
