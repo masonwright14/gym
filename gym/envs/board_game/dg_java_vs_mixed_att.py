@@ -8,6 +8,7 @@ Requirements:
 
 import csv
 import random
+import re
 from py4j.java_gateway import JavaGateway, GatewayParameters, CallbackServerParameters
 from py4j.java_collections import ListConverter
 import numpy as np
@@ -405,9 +406,10 @@ class DepgraphJavaEnvVsMixedAtt(gym.Env):
         epoch_index = net_name.find('epoch')
         num_start_index = epoch_index + len("epoch")
         num_end_index = None
-        if "_att.pkl" in net_name:
+        retrain_pattern = re.compile("_r[0-9]+")
+        if "_att.pkl" in net_name or retrain_pattern.search(net_name):
             # attacker network
-            num_end_index = net_name.find("_att.pkl", num_start_index)
+            num_end_index = net_name.find("_", num_start_index)
         else:
             # defender network
             num_end_index = net_name.find(".pkl", num_start_index)
@@ -424,12 +426,6 @@ class DepgraphJavaEnvVsMixedAtt(gym.Env):
         Get the total discounted reward of self (defender) in the current game.
         '''
         return JAVA_GAME.getSelfTotalPayoff()
-
-    def update_for_retrain(self, retrain_config_str):
-        '''
-        Change to using retrain_config_str as the opponent mixed strategy.
-        '''
-        self.setup_att_mixed_strat(retrain_config_str)
 
     def get_port(self):
         '''
